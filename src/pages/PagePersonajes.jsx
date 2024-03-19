@@ -7,9 +7,13 @@ export const PagePersonajes = () => {
 
     const { personajes, obtnerPersonajes, columnasPersonajes } = usePersonajes();
 
-    useEffect(()=>{
-        obtnerPersonajes();
-    }, [])
+    useEffect(() => {
+      const fetchData = async()=>{
+        if(personajes === null) await obtnerPersonajes();
+      }
+      fetchData();
+  
+    }, []);
   
     return (
     <>

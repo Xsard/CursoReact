@@ -1,10 +1,13 @@
 import React, { useMemo, useState } from 'react'
 import { request } from '../backend/RequestBackend'
+import { useDispatch, useSelector } from 'react-redux'
+import { setlistaPlanetas } from '../store/planetas/planetasSlice'
 
 export const usePlanetas = () => {
     
-    const [planetas, setplanetas] = useState([])
-    
+    const [planetas, setplanetas] = useState([]);
+    const { listaPlanetas } = useSelector((state) => state.planetas);
+    const dispatch = useDispatch();
     const columnasPlanetas =  useMemo(
         () => [
           {
@@ -32,14 +35,16 @@ export const usePlanetas = () => {
     }, [planetas])
 
     const obtnerPlanetas = async()=>{
+        console.log("Se ejecutó obtnerPlanetas")
+
         const response = await request("GET", import.meta.env.VITE_APP_URL_PLANETAS);
-        console.log(response)
-        setplanetas(response.items)
+         
+        dispatch(setlistaPlanetas({listaPlanetas: response.items, message: "OK"}));
     }
 
     return {
         obtnerPlanetas,
-        planetas: planetasDbz,
+        planetas: listaPlanetas,
         columnasPlanetas
     }
 }

@@ -8,12 +8,15 @@ import { ImgGoku, ImgTierra } from '../assets/'
 export const PageHome = () => {
   const navigate = useNavigate();
 
-  const { personajes, obtnerPersonajes, columnasPersonajes } = usePersonajes();
   const { planetas, obtnerPlanetas, columnasPlanetas } = usePlanetas();
+  const { personajes, obtnerPersonajes, columnasPersonajes } = usePersonajes();
 
-  useEffect(() => {
-    obtnerPersonajes();
-    obtnerPlanetas();
+  useEffect(() => {    
+    const fetchData = async()=>{
+      if(planetas === null) await obtnerPlanetas();
+      if(personajes === null) await obtnerPersonajes();
+    }
+    fetchData();
   }, []);
 
   return (
@@ -34,9 +37,13 @@ export const PageHome = () => {
         </Button>
       </Stack>
       <Box sx={{width:"75%", m: 5,  marginLeft:"auto", marginRight:"auto"}}>
-        <TableRegistros data={personajes} columnas={columnasPersonajes} pageSize={5}/>
+        {(personajes === null) ? (<h2>Loading...</h2>) :
+          (<TableRegistros data={personajes} columnas={columnasPersonajes} pageSize={5}/>)
+        }
         <Divider orientation="horizontal" flexItem />
-        <TableRegistros data={planetas} columnas={columnasPlanetas} pageSize={5}/>
+        {(planetas === null) ? (<h2>Loading...</h2>) :
+          (<TableRegistros data={planetas} columnas={columnasPlanetas} pageSize={5}/>)
+        }
       </Box>
     </>
   );
